@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>ホワイトノイズプレーヤー</title>
+</head>
+
+<body>
+    <!-- TODO
+        ・選択したMP3の音源を止めるボタンを押すまでずっと再生し続ける
+        ・再生・停止ボタンをおく 
+        
+    -->
+    <h1>ホワイトノイズプレーヤー</h1>
+    <form>
+        <label for="file">音を選択してください。</label><br>
+            <input type="radio" name="audio" id="base1" value="base1.mp3" onchange="change()" checked>雨
+            <input type="radio" name="audio" id="atmosphere1" value="atmosphere1.mp3" onchange="change()">大気<br>
+            <a href="javascript:void(0);" onclick="Play()">再生</a>
+            <a href="javascript:void(0);" onclick="Stop()">停止</a>
+    </form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="audiojs/audio.min.js"></script>
+<script>
+    // audiojs.events.ready(function() {
+    //     var as = audiojs.createAll();
+
+    //     const audio = document.querySelector("audio");
+    //     audio.addEventListener("ended", (event) => {
+    //         audio.currentTime = 0;
+    //         audio.play();
+    //     });
+    // });
+</script>
+<script>
+    jQuery(function() {
+
+        $('#file').change(function() {
+            var input_val = document.getElementById('file').value.replace(/C:\\fakepath\\/g, "mp3/");
+            $('#audio').attr("src", input_val);
+        })
+    })
+</script>
+<script>
+    var audioSrc = "base1.mp3";
+
+    function change() {
+        var audios = document.getElementsByName('audio');
+        for (var i = 0; i < audios.length; i++) {
+            if (audios[i].checked) {
+                audioSrc = audios[i].value;
+            }
+        }
+    }
+
+    var audioElem;
+    audioElem = new Audio();
+    audioElem.src = "mp3/" + audioSrc + "#t=0,2.8";
+
+    function Play() {
+        Stop();
+        audioElem.play();
+        audioElem.addEventListener("timeupdate", function() {
+            var buf = .2;
+            if (this.currentTime > this.duration - buf) {
+                this.currentTime = 0;
+                this.play();
+            }
+        })
+    }
+
+    function Stop() {
+        audioElem.pause();
+    }
+</script>
+
+</html>
